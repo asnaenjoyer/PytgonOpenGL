@@ -12,7 +12,7 @@ class MyMiniGame(Game):
             vertex_shader=load_shader("shaders/test/world.vert"),
             fragment_shader=load_shader("shaders/test/world.frag")
         )
-        self.world = World(500, 500, self.ctx, self.world_program, (0,0))
+        self.world = World(2000, 2000, self.ctx, self.world_program, (0,0))
 
     def draw(self):
         self.world.draw(self.projection)
@@ -24,9 +24,9 @@ class MyMiniGame(Game):
             dx = m_pos_x - self.width / 2
             dy = m_pos_y - self.height / 2
             self.set_camera_pos(self.camera_pos[0] + (dx * self.delta_time), self.camera_pos[1] + (dy * self.delta_time))
-            self.set_zoom(1000)
+
         self.world_program['view'].write(self.get_view_matrix().astype("f4"))
-        print(self.camera_pos)
+
 
 if __name__ == "__main__":
     game = MyMiniGame(720, 720)

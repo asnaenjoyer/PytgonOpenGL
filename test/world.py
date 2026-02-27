@@ -1,8 +1,8 @@
 import numpy as np
 from pyrr import Matrix44
-import random
+from noise import pnoise2
 
-CELL_SIZE = 1
+CELL_SIZE = 4
 
 class World:
     def __init__(self, rows, cols, ctx, program, position=(0,0), size=(1,1), rotation=0):
@@ -28,9 +28,7 @@ class World:
 
         self.vao = ctx.vertex_array(
             program,
-            [
-                (self.vbo, '2f 3f', 'in_pos', 'in_color')
-            ],
+            [(self.vbo, '2f 1f', 'in_pos', 'in_color')],
             index_buffer=ibo
         )
 
@@ -52,16 +50,16 @@ class World:
                 x = col * CELL_SIZE
                 y = row * CELL_SIZE
                 
-                
-                r = random.random()
-                g = random.random()
-                b = random.random()
+                scale = 0.025
+
+                c = pnoise2(col * scale, row * scale, octaves=4)
+                c = (c + 1) / 2 
                 
                 self.vertices.extend([
-                    x, y, r, g, b,
-                    x + CELL_SIZE, y, r, g, b,
-                    x + CELL_SIZE, y + CELL_SIZE, r, g, b,
-                    x, y + CELL_SIZE, r, g, b
+                    x, y, c,
+                    x + CELL_SIZE, y, c,
+                    x + CELL_SIZE, y + CELL_SIZE, c,
+                    x, y + CELL_SIZE, c
                 ])
 
         for row in range(self.rows):
